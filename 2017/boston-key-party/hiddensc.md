@@ -168,7 +168,7 @@ sz? 4294967296
 free? 
 ```
 
-In the above session we can see 8589934592 (2**33) fails while 4294967296 (2**32) succeeds. Somewhere between those two numbers is the amount of RAM on my machine, so clearly the operating system is rejecting an allocation so large that the system cannot possibly use it. However, testing on the remote server shows something interesting.
+In the above session we can see 8589934592 (2^33) fails while 4294967296 (2^32) succeeds. Somewhere between those two numbers is the amount of RAM on my machine, so clearly the operating system is rejecting an allocation so large that the system cannot possibly use it. However, testing on the remote server shows something interesting.
 
 ```
 [a]lloc, [j]ump : a
@@ -186,7 +186,7 @@ After some searching, I found the setting they must have used on their server to
 # echo 1 > /proc/sys/vm/overcommit_memory
 ```
 
-After changing this setting, allocations as large as 2**48 work locally just like on the remote server. This means developing a solution locally is possible
+After changing this setting, allocations as large as 2^48 work locally just like on the remote server. This means developing a solution locally is possible
 
 ## Developing a Solution
 
@@ -206,9 +206,9 @@ Mapped address spaces:
       ...
 ```
 
-From 0x0 to 0x555555555555 is somewhere between 2**46 and 2**47 bytes, and 0x555555779000 to 0x7ffff71da000 is somewhere between 2**46 and 2**45 bytes. The shellcode can be mapped to anywhere inside the first empty space which will split it into two parts.
+From 0x0 to 0x555555555555 is somewhere between 2^46 and 2^47 bytes, and 0x555555779000 to 0x7ffff71da000 is somewhere between 2^46 and 2^45 bytes. The shellcode can be mapped to anywhere inside the first empty space which will split it into two parts.
 
-Let's see what happens if we create an allocation of size 2**32.
+Let's see what happens if we create an allocation of size 2^32.
 
 ```
 gdb-peda$ info proc mappings
@@ -228,7 +228,7 @@ Mapped address spaces:
       ...
 ```
 
-It looks like malloc put the allocated memory at the bottom of memory, just above some of the libraries. Unfortunately this isn't doesn't help with figuring out where the shellcode page is, but creating an allocation of size 2**45 bytes will fill up most of that space. This means allocations in the range 2**45 to 2**47 should be populated in the area around the shellcode page after the lower free space is taken up.
+It looks like malloc put the allocated memory at the bottom of memory, just above some of the libraries. Unfortunately this isn't doesn't help with figuring out where the shellcode page is, but creating an allocation of size 2^45 bytes will fill up most of that space. This means allocations in the range 2^45 to 2^47 should be populated in the area around the shellcode page after the lower free space is taken up.
 
 ```
 gdb-peda$ info proc mappings
