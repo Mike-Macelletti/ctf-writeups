@@ -1,4 +1,4 @@
-# hiddensc [200 points]
+# hiddensc [200]
 
 Boston Key Party 2017 pwn 200
 
