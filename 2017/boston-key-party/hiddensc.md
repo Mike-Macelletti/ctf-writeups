@@ -260,7 +260,7 @@ Looking back on this problem, the solution would have been to not free the bigge
 
 ### Implementation
 
-hsc.py contains the code used to solve the problem. After some initial testing, the maximum size found by the binary search algorithm was consistently 16 or 17 pages smaller than the location of the shellcode. With this adjustment, it works after both possibilities are tried.
+hiddensc.py contains the code used to solve the problem. After some initial testing, the maximum size found by the binary search algorithm was consistently 16 or 17 pages smaller than the location of the shellcode. With this adjustment, it works after both possibilities are tried.
 
 This is not a problem because the server only randomizes the shellcode location every 20 minutes. Both possibilities can be tried without having to recalculate the address of the shellcode.
 
