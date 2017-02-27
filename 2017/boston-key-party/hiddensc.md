@@ -86,7 +86,7 @@ From here I starting reverse engineering the binary in GDB. First I took a look 
 0x555555555594 <+391>:	call   0x555555554f40 <mmap@plt>
 ```
 
-Based on the assembly it looks like the shellcode is placed at a random address between 0x0 and 0x555555555555. The program mmaps a page with execute permissions and puts the shellcode there.
+Based on the assembly it looks like the shellcode is placed at a random address between 0x0 and 0x555555555555 or so. The program mmaps a page with execute permissions and puts the shellcode there.
 
 ### Dynamic Analysis
 
